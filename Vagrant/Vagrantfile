@@ -13,6 +13,6 @@
 	end
 	end
 
-# below command is used to create .box file from VM hosted on oracle virtual box, PQEAUTOPF4 is the vm name hosted on vbox
+# below command is used to create .box file from VM hosted on oracle virtual box, <VMname> is the vm name hosted on vbox
 
-	vagrant package --base PQEAUTOPF4
+	vagrant package --base <VMname>
