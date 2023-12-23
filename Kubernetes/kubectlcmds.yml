@@ -1,0 +1,28 @@
+#to restart pod in deployment
+kubectl rollout restart deployment <deployment_name>
+#to restart Pod directly 
+kubectl delte pod <pod_name>
+#commands frequently used
+Kubectl get pods
+Kubectl get nodes
+Kubectl get ReplicaSet
+Kubectl describe pod/<podname>
+Kubectl describe Node/<nodename>
+Kubectl describe ReplicaSet/<replicatesetname>
+Kubectl delete pod <podname>
+Kubectl delete node <nodename>
+Kubectl delete ReplicaSet <ReplicaSetname>
+Kubectl get pods -o wide
+
+
+#Deployments update and rollback commands
+
+Kubectl create -f deployment-definition.yml --record
+Kubectl get deployments
+Kubectl apply -f deployment-definition.yml --record(update)
+Kubectl set image deployment/myapp-deployment nginx=nginx:1.9.1 --record (Updating the existing pod application version)
+Kubectl rollout status deployment/myapp-deployment
+Kubectl rollout history deployment/myapp-deployment
+Kubectl rollout undo deploy (rollback to previous state)
+
+

@@ -1,0 +1,11 @@
+#Creating redis Pod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: redis
+  labels:
+    type: backend_application
+spec:
+  containers:
+   - name: redis
+     image: redis

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: voting-pod
+  labels: 
+    name: voting-pod
+    tier: frontendapp1
+    app: demo-votingapplication
+spec:
+  containers:
+   - name: voteapp
+     image: kodekloud/examplevotingapp_vote:v1
+     
+     ports: 
+      - containerPort: 80
