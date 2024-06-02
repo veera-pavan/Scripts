@@ -1,0 +1,75 @@
+trigger:
+- main
+ 
+pr:
+- '*'
+ 
+jobs:
+- job: BuildAndDeploy
+  displayName: 'Build and Deploy Job'
+  pool:
+    vmImage: 'windows-latest'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+ 
+  steps:
+  - task: UseDotNet@2
+    inputs:
+      packageType: 'sdk'
+      version: '3.1.x'
+ 
+  - task: DotNetCoreCLI@2
+    displayName: 'Restore'
+    inputs:
+      command: 'restore'
+      projects: '**/*.csproj'
+      feedsToUse: 'select'
+ 
+  - task: DotNetCoreCLI@2
+    displayName: 'Build'
+    inputs:
+      command: 'build'
+      projects: '**/*.csproj'
+      arguments: '--configuration Release'
+ 
+  - task: DotNetCoreCLI@2
+    displayName: 'Publish'
+    inputs:
+      command: 'publish'
+      publishWebProjects: true
+      arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)'
+ 
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact'
+    inputs:
+      pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      artifactName: 'drop'
+      publishLocation: 'Container'
+ 
+- job: DeployToAzureWebApp
+  displayName: 'Deploy to Azure Web App'
+  dependsOn: BuildAndDeploy
+  pool:
+    vmImage: 'windows-latest'
+ 
+  variables:
+    azureSubscriptionEndpoint: 'Your-Azure-Service-Connection-Name'
+    appName: 'Your-Azure-Web-App-Name'
+    resourceGroupName: 'Your-Azure-Resource-Group-Name'
+
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+ 
+  steps:
+  - task: UseDotNet@2
+    inputs:
+      packageType: 'runtime'
+      version: '3.1.x'
+ 
+  - task: AzureRmWebAppDeployment@4
+    inputs:
+      ConnectionType: 'AzureRM'
+      azureSubscription: $(azureSubscriptionEndpoint)
+      appType: 'webApp'
+      WebAppName: $(appName)
+      packageForwindows: '$(Pipeline.Workspace)/drop/**/*.zip'
+      deploymentMethod: 'auto'
+      enableCustomDeployment: true

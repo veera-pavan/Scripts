@@ -1,0 +1,64 @@
+#pod definition file
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: frontend_app
+  labels:
+    name: frontend_app
+    app: voting_app
+spec:
+  containers:
+    - name: nginx
+      image: nginx
+  ports:
+     port: 80
+     targetport: 80
+# service definition file
+apiVersion: v1
+kind: service
+metatdata: 
+  name: frontend_service
+  labels:
+    name: frontend_service
+    app: voting_app
+spec:
+  type: NodePort
+  ports:
+    port: 80
+    targetport: 80
+    nodeport: 30004
+  selector:
+    name: frontend_app
+    app: voting_app
+
+
+
+#deployment definition file
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend_app_pool
+  labels:
+    name: frontend_app_pool
+    app: voting_app
+spec:
+  selector:
+    matchLabels:
+      name: frontend_app
+      app: voting_app
+  replicas: 3
+  template:
+    metadata:
+      name: frontend_app
+      labels:
+        name: frontend_app
+        app: voting_app
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+      ports:
+        port: 80
+        targetport: 80
+

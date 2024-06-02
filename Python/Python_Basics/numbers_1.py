@@ -10,6 +10,7 @@ print(9-1)
 #multiplication
 print(9*9)
 print(9*9+10)
+#he order of operations (PEMDAS) is essential for solving complex math problems. PEMDAS stands for Parentheses, Exponents, Multiplication and Division (same level), and Addition and Subtraction (same level)
 print(9*(9+1))
 #divsion
 print(9/9)

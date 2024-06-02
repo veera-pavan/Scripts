@@ -1,0 +1,13 @@
+#creating nginx pod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-image
+  labels: 
+    name: nginxapp
+    tier: frontendapp1
+spec:
+  containers:
+   - name: nginx-image
+     image: nginx
+

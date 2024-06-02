@@ -1,0 +1,11 @@
+#pip upgrade command
+C:\Users\panjagala.pavan\AppData\Local\Programs\Python\Python311\python.exe -m pip install --trusted-host pypi.python.org --trusted-host files.pythonhosted.org --upgrade pip 
+
+#installing Numpy package
+C:\Users\panjagala.pavan\AppData\Local\Programs\Python\Python311\python.exe -m pip install --trusted-host pypi.python.org --trusted-host files.pythonhosted.org Numpy 
+
+#list installed packages
+pip list
+
+#uninstall installed packages
+C:\Users\panjagala.pavan\AppData\Local\Programs\Python\Python311\python.exe -m pip uninstall --trusted-host pypi.python.org --trusted-host files.pythonhosted.org Numpy

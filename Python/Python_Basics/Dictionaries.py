@@ -11,7 +11,5 @@ months = {
     "Oct": "October",
     "Nov": "November",
     "Dec": "December"
-
 }
-
 print(months.get(0, "not a valid key"))
