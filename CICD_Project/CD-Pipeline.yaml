@@ -27,6 +27,7 @@ steps:
       
       # installed terraform version
       terraform -v
+      pwd
 
       # Initialize Terraform
       terraform init
