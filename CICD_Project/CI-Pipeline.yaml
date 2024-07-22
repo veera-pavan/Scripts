@@ -1,0 +1,70 @@
+#CI pipeline
+resources:
+  repositories:
+    - repository: bitbucket-repo
+      type: git
+      name: your-bitbucket-repo
+      endpoint: your-bitbucket-service-connection
+      
+trigger:
+- master
+
+pool:
+ name:default
+ demand:
+ -agent.name -equal linuxagent
+
+variables:
+ JAVA_HOME: /usr/bin/java
+ AZURE_ARTIFACTS_USER: '$(System.AccessToken)'
+ AZURE_ARTIFACTS_PAT: '$(System.AccessToken)'
+
+
+stages:
+ - stage: Build
+    jobs:
+    - job: Git_clone_Job
+       steps
+       - task: gitclone@1
+         inputs:
+          versionspec: '17'
+          jdkorchetectureoption: 'x64'
+          jdksourceoption: 'preinstalled'
+          jdkdestinationoption: 'AzureStorage'
+          cleandestinationdirectory: false
+
+       - script:
+          watch java
+          gw clean build install
+          displayname: 'build with gradle'
+          env:
+            AZURE_ARTIFACT_USER: $(AZURE_ARTIFACTS_USER)
+            AZURE_ARTIFACT_PAT: $(AZURE_ARTIFACT_PAT)
+     - job: BuildJob
+       steps
+       - task: UseJava@1
+         inputs:
+          versionspec: '17'
+          jdkorchetectureoption: 'x64'
+          jdksourceoption: 'preinstalled'
+          jdkdestinationoption: 'AzureStorage'
+          cleandestinationdirectory: false
+
+       - script:
+          watch java
+          gw clean build install
+          displayname: 'build with gradle'
+          env:
+            AZURE_ARTIFACT_USER: $(AZURE_ARTIFACTS_USER)
+            AZURE_ARTIFACT_PAT: $(AZURE_ARTIFACT_PAT)
+           
+
+ -stage2
+    jobs
+     -job:
+       steps
+        -task:
+          input:
+        - script:
+           cmd:
+      
