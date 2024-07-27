@@ -13,7 +13,9 @@ steps:
     targetType: 'inline'
     script: |
       # Clone the GitHub repository
-      git clone https://$(GITHUB_PAT)@github.com/veera-pavan/Scripts.git terraform-code
+      git clone https://github.com/veera-pavan/Scripts.git
+      ls
+      
 
   displayName: 'Clone Repository'
   env:
@@ -30,7 +32,11 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      cd terraform-code/CICD_Project/VM_creation
+
+      git checkout testbranch 
+      cd ./Scripts/CICD_Project/VM_creation
+      pwd
+      ls
 
       # Export the environment variables for Terraform
       export ARM_CLIENT_ID=$(ARM_CLIENT_ID)
