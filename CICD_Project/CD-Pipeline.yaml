@@ -34,7 +34,8 @@ steps:
     script: |
 
       git checkout testbranch 
-      cd ./Scripts/CICD_Project/VM_creation
+      ls
+      cd ./CICD_Project/VM_creation
       pwd
       ls
 
