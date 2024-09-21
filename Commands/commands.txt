@@ -8,3 +8,18 @@ az group deployment create --name MyDeployment --resource-group MyResourceGroup 
 Azure PowerShell:
 
 New-AzResourceGroupDeployment -Name MyDeployment -ResourceGroupName MyResourceGroup -TemplateFile azuredeploy.json
+
+#Azure CLI - Storage account and file share creation
+
+az storage account create -g <resource-group-name> -n <storage_accoutnname> -l northeurope --sku Standard_LRS
+az storage share create -n <storage_accoutnname_sharename> --account-name <storage_accoutnname>
+
+#get access key to a variable
+
+az storage account keys list -g <resource-group-name> --account-name <storage_accoutnname> --query "[0].value" --output tsv > temp.txt
+$content = Get-Content temp.txt -First 1
+$key = '"{0}"' -f $content
+Write-Output $key
+
+#download file from azure file share
+az storage file download --account-name <storage_accoutnname> --account-key $key -s <azure-file-share-name> -p test.xml --dest %SYSTEM_DESTINATION_DIRECTORY%\OWASP-ZAP-Report.xml
