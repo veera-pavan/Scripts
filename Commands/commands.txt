@@ -1,0 +1,10 @@
+ARM Deployment commands
+Azure CLI:
+
+bash
+az group deployment create --name MyDeployment --resource-group MyResourceGroup --template-file azuredeploy.json
+
+
+Azure PowerShell:
+
+New-AzResourceGroupDeployment -Name MyDeployment -ResourceGroupName MyResourceGroup -TemplateFile azuredeploy.json
