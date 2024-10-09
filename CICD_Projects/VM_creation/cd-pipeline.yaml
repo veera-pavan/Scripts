@@ -1,0 +1,83 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger: none
+
+pool:
+ name: 'azureagent'
+
+variables:
+  bkstrgrg: 'azurecicd'
+  bkstrg: 'cicdstorageaccount'
+  bkcontainer: 'tfstate'
+  bkstrgkey: 'vmpipeline.terraform.tfstate'
+
+stages:
+  - stage: tfvalidate
+    jobs:
+      - job: validate
+        continueOnError: false
+        steps:
+          - task: TerraformTaskV3@3
+            displayName: init
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              backendServiceArm: 'Free Trial (593eaa2e-c072-400e-8acb-ac8e1d18e2f2)'
+              backendAzureRmResourceGroupName: '$(bkstrgrg)'
+              backendAzureRmStorageAccountName: '$(bkstrg)'
+              backendAzureRmContainerName: '$(bkcontainer)'
+              backendAzureRmKey: '$(bkstrgkey)'
+          - task: TerraformTaskV4@4
+            displayName: validate
+            inputs:
+              provider: 'azurerm'
+              command: 'validate'
+  - stage: tfdeploy
+    #condition: succeded('tfvalidate')
+    dependsOn: tfvalidate
+    jobs:
+      - job: apply
+        steps:
+          - script: |
+              echo "Cloning repository from Azure Repos"
+              # Use the PAT to clone the repository
+              git clone https://$(PAT_TOKEN)@dev.azure.com/documentprofesionally/voting-app/_git/Scripts.git
+              echo "present working directory details below"
+              pwd
+              echo "list of directories after git clone"
+              ls
+
+
+            displayName: 'Clone Azure Repo Using PAT'
+            env:
+              PAT_TOKEN: $(PAT_TOKEN)  # Access the PAT token from the variable group
+          - task: TerraformTaskV3@3
+            displayName: init
+            
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              workingDirectory: '/home/azureuser/myagent/_work/7/s/CICD_Projects/VM_creation'
+              backendServiceArm: 'Free Trial (593eaa2e-c072-400e-8acb-ac8e1d18e2f2)'
+              backendAzureRmResourceGroupName: '$(bkstrgrg)'
+              backendAzureRmStorageAccountName: '$(bkstrg)'
+              backendAzureRmContainerName: '$(bkcontainer)'
+              backendAzureRmKey: '$(bkstrgkey)'
+          - task: TerraformTaskV4@4
+            displayName: plan
+            inputs:
+              provider: 'azurerm'
+              command: 'plan'
+              workingDirectory: '/home/azureuser/myagent/_work/7/s/CICD_Projects/VM_creation'
+              environmentServiceNameAzureRM: 'Free Trial(593eaa2e-c072-400e-8acb-ac8e1d18e2f2)'
+
+          - task: TerraformTaskV4@4
+            displayName: apply
+            inputs:
+              provider: 'azurerm'
+              command: 'apply'
+              workingDirectory: '/home/azureuser/myagent/_work/7/s/CICD_Projects/VM_creation'
+              environmentServiceNameAzureRM: 'Free Trial(1)(593eaa2e-c072-400e-8acb-ac8e1d18e2f2)'
